@@ -1,0 +1,27 @@
+<h1>Список ключей со значениями</h1>
+
+<% if @keys.empty? %>
+  <b>No keys in storage</b>
+<% else %>
+<table border="2">
+  <tr>
+    <th>id</th>
+    <th>Key</th>
+    <th>Value</th>
+    <th></th>
+  </tr>
+
+  <% @keys.each do |i| %>
+
+    <tr>
+      <td><%= i.id %></td>
+      <td><%= link_to i.key, controller: "kvstorages", action: "get", id: i %></td>
+      <td><%= i.value %></td>
+      <td><%= link_to "Удалить", controller: "kvstorages", action: "destroy", id: i , method: :delete%></td>
+    </tr>
+
+  <% end %>
+
+</table>
+
+<% end %>

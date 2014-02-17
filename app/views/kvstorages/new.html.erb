@@ -1,0 +1,12 @@
+<h1>Set new key</h1>
+
+<%= form_for @key,  url: { action: "set" } do |f| %>
+  <%= f.error_messages :header_message => "Ошибка!",
+  :message => "Необходимо исправить следующие ошибки:",
+  :header_tag => :h3 %>
+  <p>Ключ: <br/><%= f.text_field :key %></p>
+  <p>Значение: <br/><%= f.text_field :value %></p>
+
+  <p><%= f.submit "Создать ключ" %></p>
+
+<% end %>

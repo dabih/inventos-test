@@ -1,0 +1,24 @@
+development:
+  adapter: postgresql
+  encoding: unicode
+  database: inventos_test_task_development
+  pool: 5
+  username: dabih
+  password:
+
+test:
+  adapter: postgresql
+  encoding: unicode
+  database: inventos_test_task_test
+  pool: 5
+  username: dabih
+  password:
+
+production:
+  adapter: postgresql
+  encoding: unicode
+  database: inventos_test_task_production
+  pool: 5
+  username: dabih
+  password:
+
