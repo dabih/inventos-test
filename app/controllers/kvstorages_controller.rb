@@ -47,37 +47,13 @@ class KvstoragesController < ApplicationController
   #Mixing values randomly
   def shuffle
 
-  #In this commented out part I try to shuffle the values without loops (in mysql database)
-
-#   sql = "CREATE temporary TABLE if not exists `temp_storage` ( `value` text ) ENGINE=InnoDB DEFAULT CHARSET=utf8; DELETE FROM temp_store; INSERT INTO temp_store SELECT `value` FROM kvstorages; UPDATE kvstorages SET `value` = (SELECT `value` FROM temp_store ORDER BY RAND() LIMIT 1);"
-#    sql = "CREATE TABLE if not exists `temp_store` ( 
-#             `id` int(11) NOT NULL, 
-#             `key` text,
-#             `value` text,
-#             `rating` int(11) default 0,
-#             `created_at` datetime NOT NULL,
-#             `updated_at` datetime NOT NULL,
-#             PRIMARY KEY (`id`)
-#           ) ENGINE=InnoDB DEFAULT CHARSET=utf8;" 
-#    sql1 = "DELETE FROM temp_store;"
-#    sql2 = "INSERT INTO temp_store (SELECT * FROM kvstorages ORDER BY RAND());"
-#    sql3 = "REPLACE INTO kvstorages (`value`) SELECT `value` FROM temp_store WHERE temp_store.id=kvstorages.id;"
-#    sql3 = "UPDATE kvstorages SET `value` = (SELECT `value` FROM temp_storage ORDER BY RAND() LIMIT 1);"
-   
-
-    kvhash = Hash.new
-    Kvstorage.select("key, value").each do |q|
-      kvhash.merge!Hash[q.key, q.value]
-    end
-
-    valarray = kvhash.values.shuffle
-    i=0
-
-    kvhash.each_key do |key|
-      ActiveRecord::Base.connection.execute("UPDATE kvstorages SET value='#{valarray[i]}' WHERE key='#{key}';")
-      i += 1
-    end
-
+      Kvstorage.transaction do
+        kvhash = Hash.new
+        Kvstorage.select("id, value").each do |q|
+          kvhash[q.id] = {"value" => q.value}
+        end
+        Kvstorage.update(kvhash.keys, kvhash.values.shuffle)
+      end
     redirect_to action: "index" 
   end
 
@@ -96,7 +72,7 @@ class KvstoragesController < ApplicationController
     end
 
     def find_all_keys
-      @keys = Kvstorage.all
+      @keys = Kvstorage.order('id')
     end
 
 end
