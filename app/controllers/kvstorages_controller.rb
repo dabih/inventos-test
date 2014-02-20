@@ -40,7 +40,7 @@ class KvstoragesController < ApplicationController
   #Delete selected key from table
   def destroy
     @key.destroy
-    redirect_to action: "index" 
+    redirect_to request.referer
   end
 
 
